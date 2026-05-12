@@ -1,7 +1,9 @@
 -- Bu dosya: Portfolyo projesinin veritabanı şemasını ve örnek başlangıç verilerini oluşturur.
 -- Proje için kullanılacak veritabanı UTF-8 uyumlu şekilde oluşturulur.
-CREATE DATABASE IF NOT EXISTS irem_portfolio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE irem_portfolio;
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET collation_connection = 'utf8mb4_unicode_ci';
+
 
 -- Kurulum tekrarlanabilir olsun diye mevcut tablolar bağımlılık sırasına uygun temizlenir.
 DROP TABLE IF EXISTS messages;
@@ -21,7 +23,8 @@ CREATE TABLE admins (
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Portfolyoda gösterilecek proje kartlarının temel içerik alanları.
 CREATE TABLE projects (
@@ -38,7 +41,8 @@ CREATE TABLE projects (
     sort_order INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Teknik yetenekler kategori, ad ve açıklama bilgisiyle tutulur.
 CREATE TABLE skills (
@@ -47,7 +51,8 @@ CREATE TABLE skills (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(255) DEFAULT NULL,
     sort_order INT DEFAULT 0
-);
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- İletişim formundan gelen ziyaretçi mesajları bu tabloya kaydedilir.
 CREATE TABLE messages (
@@ -58,7 +63,8 @@ CREATE TABLE messages (
     message TEXT NOT NULL,
     is_read TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
  
  
@@ -127,7 +133,8 @@ CREATE TABLE calendar_notes (
     note_text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- Toplam ziyaret sayacı tek satırlık sayaç tablosunda tutulur.
@@ -135,7 +142,8 @@ CREATE TABLE visitor_stats (
     id INT PRIMARY KEY DEFAULT 1,
     total_views INT NOT NULL DEFAULT 0,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO visitor_stats (id, total_views) VALUES (1, 0);
 
