@@ -1,0 +1,28 @@
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+.cache/
+
+# Local environment files / secrets
+.env
+.env.*
+!/.env.example
+
+# Runtime uploads: keep folder, ignore uploaded user files
+assets/uploads/admin-files/*
+!assets/uploads/admin-files/.gitkeep
+
+# Dependency folders if added later
+node_modules/
+vendor/
+
+# Local database dumps except required project export
+*.sql
+!database/portfolio.sql
