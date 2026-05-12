@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .replace(/'/g, '&#039;');
 
             const renderProjectCard = (project, index) => {
-                const translatedProject = window.portfolioI18n?.projectCards?.[index];
+                const translatedProject = window.portfolioI18n ? resolveProjectTranslation(window.portfolioI18n, index, [project.title, project.code_name, project.github_url]) : null;
                 const currentLang = localStorage.getItem('portfolioLang') || getCookie('portfolio_lang') || document.documentElement.lang || 'en';
                 const title = translatedProject?.title || project.title || 'Untitled Project';
                 const codeName = translatedProject?.code || project.code_name || title;
@@ -536,7 +536,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     .join('');
 
                 return `
-                    <article class="project-card ${index === 0 ? 'is-active' : ''}" data-project-card data-index="${index}">
+                    <article class="project-card ${index === 0 ? 'is-active' : ''}" data-project-card data-index="${index}" data-project-source-title="${escapeHtml(project.title || '')}" data-project-source-code="${escapeHtml(project.code_name || '')}" data-project-github="${escapeHtml(project.github_url || '')}">
                         <img class="project-card-image" src="${escapeHtml(image)}" alt="${escapeHtml(title)} preview" loading="lazy">
                         <div class="project-card-overlay" aria-hidden="true"></div>
                         <div class="project-deco" aria-hidden="true"></div>
@@ -614,8 +614,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (projectFlyingTitle && activeTitle) {
                     const titleLines = {
                         'Industrial Attack Detection System': ['Industrial Attack', 'Detection System'],
+                        'Endüstriyel Saldırı Tespit Sistemi': ['Endüstriyel Saldırı', 'Tespit Sistemi'],
                         'Go Product Management': ['Go Product', 'Management'],
-                        'Smart Transportation Database': ['Smart Transportation', 'Database']
+                        'Smart Transportation Database': ['Smart Transportation', 'Database'],
+                        'Go Ürün Yönetimi': ['Go Ürün', 'Yönetimi'],
+                        'Akıllı Ulaşım Veritabanı': ['Akıllı Ulaşım', 'Veritabanı']
                     };
                     const lines = titleLines[activeTitle] || [activeTitle];
 
@@ -819,26 +822,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 "projectCards": [
                         {
+                                "match": ["Industrial Attack Detection System", "Endüstriyel Saldırı Tespit Sistemi", "Industrial-Attack-Detection-System"],
                                 "title": "Industrial Attack Detection System",
                                 "code": "Industrial Attack Detection System",
                                 "description": "A machine-learning based security system for detecting attacks in Industrial IoT environments. It uses four AI models to identify anomalies and possible cyber threats."
                         },
                         {
+                                "match": ["Go Product Management", "Go Ürün Yönetimi", "GoProductManagement"],
                                 "title": "Go Product Management",
                                 "code": "Go Product Management",
                                 "description": "A full-stack product management system built with a Go backend and Vue frontend, supporting product creation, listing and administration workflows."
                         },
                         {
+                                "match": ["Smart Transportation Database", "Akıllı Ulaşım Veritabanı", "Smart_Transportation_Database"],
                                 "title": "Smart Transportation Database",
                                 "code": "Smart Transportation Database",
                                 "description": "A database project designed for smart transportation systems, focused on managing vehicles, routes, stops, passengers and mobility data."
                         },
                         {
+                                "match": ["Ilanpazar", "İlanpazar", "ILANPAZAR", "ilanpazar"],
                                 "title": "Ilanpazar",
                                 "code": "ILANPAZAR",
                                 "description": "A Next.js marketplace web application where users can create, browse and manage listings through a modern interface."
                         },
                         {
+                                "match": ["Shopora", "SHOPORA"],
                                 "title": "Shopora",
                                 "code": "SHOPORA",
                                 "description": "A modern e-commerce style web application focused on product interfaces, user flows and a smooth shopping experience."
@@ -979,26 +987,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 "projectCards": [
                         {
-                                "title": "Industrial Attack Detection System",
-                                "code": "Industrial Attack Detection System",
+                                "match": ["Industrial Attack Detection System", "Endüstriyel Saldırı Tespit Sistemi", "Industrial-Attack-Detection-System"],
+                                "title": "Endüstriyel Saldırı Tespit Sistemi",
+                                "code": "Endüstriyel Saldırı Tespit Sistemi",
                                 "description": "Industrial IoT ortamlarında saldırı tespiti yapan makine öğrenmesi tabanlı güvenlik sistemi. 4 farklı AI modeli ile anomali/saldırı tespiti amaçlanır."
                         },
                         {
-                                "title": "Go Product Management",
-                                "code": "Go Product Management",
+                                "match": ["Go Product Management", "Go Ürün Yönetimi", "GoProductManagement"],
+                                "title": "Go Ürün Yönetimi",
+                                "code": "Go Ürün Yönetimi",
                                 "description": "Go backend ve Vue frontend kullanılan ürün yönetim sistemi. Ürün ekleme, listeleme ve yönetme işlemleri için full-stack yapıdadır."
                         },
                         {
-                                "title": "Smart Transportation Database",
-                                "code": "Smart Transportation Database",
+                                "match": ["Smart Transportation Database", "Akıllı Ulaşım Veritabanı", "Smart_Transportation_Database"],
+                                "title": "Akıllı Ulaşım Veritabanı",
+                                "code": "Akıllı Ulaşım Veritabanı",
                                 "description": "Akıllı ulaşım sistemleri için tasarlanmış veritabanı projesi. Araç, rota, durak, yolcu ve ulaşım verilerini yönetmeye odaklanır."
                         },
                         {
-                                "title": "Ilanpazar",
+                                "match": ["Ilanpazar", "İlanpazar", "ILANPAZAR", "ilanpazar"],
+                                "title": "İlanpazar",
                                 "code": "ILANPAZAR",
                                 "description": "Kullanıcıların ilan oluşturup görüntüleyebildiği Next.js tabanlı ilan/pazar yeri web uygulaması."
                         },
                         {
+                                "match": ["Shopora", "SHOPORA"],
                                 "title": "Shopora",
                                 "code": "SHOPORA",
                                 "description": "Modern e-ticaret mantığında geliştirilmiş web uygulaması. Ürün arayüzü, kullanıcı işlemleri ve alışveriş deneyimi üzerine kuruludur."
@@ -1008,8 +1021,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 };
 
-    const getCookie = (name) => document.cookie.split('; ').find((row) => row.startsWith(`${name}=`))?.split('=')[1];
-    const setCookie = (name, value) => { document.cookie = `${name}=${value}; path=/; max-age=31536000`; };
+    function normalizeProjectIdentity(value = '') {
+        return String(value ?? '')
+            .toLocaleLowerCase('tr-TR')
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/ı/g, 'i')
+            .replace(/[^a-z0-9]+/g, '');
+    }
+
+    function resolveProjectTranslation(dictionary, projectIndex, candidates = []) {
+        const projectCards = dictionary?.projectCards || [];
+        const normalizedCandidates = candidates
+            .filter(Boolean)
+            .map(normalizeProjectIdentity)
+            .filter(Boolean);
+
+        const exactMatch = projectCards.find((projectCard) => {
+            const aliases = [projectCard.title, projectCard.code, ...(projectCard.match || [])]
+                .filter(Boolean)
+                .map(normalizeProjectIdentity);
+            return aliases.some((alias) => normalizedCandidates.includes(alias));
+        });
+
+        return exactMatch || projectCards?.[projectIndex] || null;
+    }
+
+    function getCookie(name) {
+        return document.cookie.split('; ').find((row) => row.startsWith(`${name}=`))?.split('=')[1];
+    }
+
+    function setCookie(name, value) {
+        document.cookie = `${name}=${value}; path=/; max-age=31536000`;
+    }
 
     // Seçilen dile göre metinler, belge dili ve kayıtlı kullanıcı tercihi güncellenir.
     const applyLanguage = (lang) => {
@@ -1069,10 +1113,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.querySelectorAll('[data-project-card]').forEach((card, index) => {
             const projectIndex = Number.isFinite(Number(card.dataset.index)) ? Number(card.dataset.index) : index;
-            const translatedProject = dictionary.projectCards?.[projectIndex];
             const titleElement = card.querySelector('[data-project-title]');
             const codeElement = card.querySelector('[data-project-code]');
             const descriptionElement = card.querySelector('[data-project-description]');
+            const translatedProject = resolveProjectTranslation(dictionary, projectIndex, [
+                card.dataset.projectSourceTitle,
+                card.dataset.projectSourceCode,
+                card.dataset.projectGithub,
+                titleElement?.textContent,
+                codeElement?.textContent
+            ]);
 
             if (translatedProject) {
                 if (titleElement && translatedProject.title) titleElement.textContent = translatedProject.title;

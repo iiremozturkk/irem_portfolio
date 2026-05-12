@@ -477,7 +477,7 @@ foreach ($skills as $skill) {
             <div class="project-carousel" aria-label="Featured projects carousel" data-i18n-aria-label="projectsCarouselAria">
                 <div class="project-stage">
                     <?php foreach ($projects as $index => $project): ?>
-                        <article class="project-card <?= $index === 0 ? 'is-active' : '' ?>" data-project-card data-index="<?= $index ?>">
+                        <article class="project-card <?= $index === 0 ? 'is-active' : '' ?>" data-project-card data-index="<?= $index ?>" data-project-source-title="<?= htmlspecialchars($project['title'] ?? '') ?>" data-project-source-code="<?= htmlspecialchars($project['code_name'] ?? '') ?>" data-project-github="<?= htmlspecialchars($project['github_url'] ?? '') ?>">
                             <img class="project-card-image" src="<?= htmlspecialchars($project['image']) ?>" alt="<?= htmlspecialchars($project['title']) ?> preview" loading="lazy">
                             <div class="project-card-overlay" aria-hidden="true"></div>
                             <div class="project-deco" aria-hidden="true"></div>
