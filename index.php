@@ -491,7 +491,7 @@ foreach ($skills as $skill) {
                             <div class="project-card-content">
                                 <span class="project-code" data-project-code><?= htmlspecialchars($project['code_name']) ?></span>
                                 <div class="project-title-clip"><h3 data-project-title><?= htmlspecialchars($project['title']) ?></h3></div>
-                                <p data-project-description><?= htmlspecialchars($project['description']) ?></p>
+                                <p data-project-description><?= htmlspecialchars($project['short_description'] ?: $project['description']) ?></p>
                                 <div class="project-tech">
                                     <?php foreach (array_filter(array_map('trim', explode(',', $project['tech_stack']))) as $tech): ?>
                                         <span><?= htmlspecialchars($tech) ?></span>

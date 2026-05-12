@@ -521,9 +521,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .replace(/'/g, '&#039;');
 
             const renderProjectCard = (project, index) => {
-                const title = project.title || 'Untitled Project';
-                const codeName = project.code_name || title;
-                const description = project.description || project.short_description || '';
+                const translatedProject = window.portfolioI18n?.projectCards?.[index];
+                const currentLang = localStorage.getItem('portfolioLang') || getCookie('portfolio_lang') || document.documentElement.lang || 'en';
+                const title = translatedProject?.title || project.title || 'Untitled Project';
+                const codeName = translatedProject?.code || project.code_name || title;
+                const description = translatedProject?.description || project.short_description || project.description || '';
                 const image = project.image || 'assets/images/project-portfolio.svg';
                 const githubUrl = project.github_url || '#';
                 const techStack = String(project.tech_stack || '')
@@ -539,7 +541,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="project-card-overlay" aria-hidden="true"></div>
                         <div class="project-deco" aria-hidden="true"></div>
                         <div class="project-actions">
-                            <a class="project-github-btn" href="${escapeHtml(githubUrl)}" target="_blank" rel="noopener" aria-label="Open ${escapeHtml(title)} on GitHub">
+                            <a class="project-github-btn" href="${escapeHtml(githubUrl)}" target="_blank" rel="noopener" aria-label="${currentLang === 'tr' ? `${escapeHtml(title)} projesini GitHub'da aç` : `Open ${escapeHtml(title)} on GitHub`}">
                                 <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" focusable="false">
                                     <path fill="currentColor" d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.05c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.74.08-.74 1.21.09 1.85 1.24 1.85 1.24 1.07 1.84 2.82 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z"/>
                                 </svg>
@@ -891,7 +893,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 "projectsLabel": "04 — Projeler",
                 "projectsTitle": "Sinematik sahneler gibi projeler.",
                 "projectsIntro": "Her projenin kendi atmosferi, kod adı ve teknik hikâyesi olan editoryal hareketli bir yapı.",
-                "projectsTagline": "<span class=\"tagline-main\">Projects that turn ideas into</span><span class=\"tagline-accent\">real, usable experiences.</span>",
+                "projectsTagline": "<span class=\"tagline-main\">Fikirleri gerçek, kullanılabilir</span><span class=\"tagline-accent\">deneyimlere dönüştüren projeler.</span>",
                 "projectSource": "⌁ kaynak",
                 "projectDemo": "demo →",
                 "experienceLabel": "03 / Deneyim",
@@ -1065,13 +1067,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             area.setAttribute('aria-label', `${categoryName} ${dictionary.skillAreaSuffix}`);
         });
 
-        document.querySelectorAll('[data-project-card]').forEach((card) => {
-            const currentTitle = card.querySelector('[data-project-title]')?.textContent?.trim() || 'Project';
+        document.querySelectorAll('[data-project-card]').forEach((card, index) => {
+            const projectIndex = Number.isFinite(Number(card.dataset.index)) ? Number(card.dataset.index) : index;
+            const translatedProject = dictionary.projectCards?.[projectIndex];
+            const titleElement = card.querySelector('[data-project-title]');
+            const codeElement = card.querySelector('[data-project-code]');
+            const descriptionElement = card.querySelector('[data-project-description]');
+
+            if (translatedProject) {
+                if (titleElement && translatedProject.title) titleElement.textContent = translatedProject.title;
+                if (codeElement && translatedProject.code) codeElement.textContent = translatedProject.code;
+                if (descriptionElement && translatedProject.description) descriptionElement.textContent = translatedProject.description;
+            }
+
+            const currentTitle = titleElement?.textContent?.trim() || (lang === 'tr' ? 'Proje' : 'Project');
             const image = card.querySelector('.project-card-image');
             const github = card.querySelector('.project-github-btn');
 
             if (image) {
-                image.alt = `${currentTitle} preview`;
+                image.alt = lang === 'tr' ? `${currentTitle} önizlemesi` : `${currentTitle} preview`;
             }
             if (github) {
                 github.setAttribute('aria-label', lang === 'tr'
